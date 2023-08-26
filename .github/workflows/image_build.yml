@@ -20,7 +20,8 @@ jobs:
       BUILD_NUMBER: ${{inputs.build_number}}
       DOCKERFILE_LOCATION: ${{inputs.dockerfile_location}}
       DOCKER_USERNAME: ${{vars.DOCKER_USERNAME}}
-      DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      # DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -29,5 +30,5 @@ jobs:
       - name: Push Docker image
         run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker image push $IMAGE_NAME
+          docker image push $IMAGE_NAME:$BUILD_NUMBER
       - run: echo "🍏 This job's status is ${{ job.status }}."
