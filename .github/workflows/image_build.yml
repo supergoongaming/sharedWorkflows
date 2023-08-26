@@ -28,6 +28,6 @@ jobs:
         run: docker image build -f $DOCKERFILE_LOCATION -t $IMAGE_NAME:$BUILD_NUMBER .
       - name: Push Docker image
         run: |
-          docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker image push $IMAGE_NAME
       - run: echo "🍏 This job's status is ${{ job.status }}."
