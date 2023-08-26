@@ -1,9 +1,4 @@
 name: Push to Docker hub
-run-name: "Push to docker hub: ${{ github.actor }} 🚀"
-
-env:
-  IMAGE_NAME: ${{inputs.IMAGE_NAME}}
-  DOCKERFILE_LOCATION: ${{inputs.DOCKERFILE_LOCATION}}
 
 on:
   push:
@@ -13,14 +8,28 @@ on:
 jobs:
   Build-Linux:
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: ${{inputs.IMAGE_NAME}}
+      DOCKERFILE_LOCATION: ${{inputs.DOCKERFILE_LOCATION}}
+      DOCKER_USERNAME: ${{vars.DOCKER_USERNAME}}
+      DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+      - name: Validate Inputs
+        run: |
+          if [ -z "${{inputs.IMAGE_NAME}}" ]; then
+            echo "IMAGE_NAME input is missing or empty."
+            exit 1
+          fi
+          if [ -z "${{inputs.DOCKERFILE_LOCATION}}" ]; then
+            echo "DOCKERFILE_LOCATION input is missing or empty."
+            exit 1
+          fi
       - name: Build Docker image
         run: docker image build -f $DOCKERFILE_LOCATION -t $IMAGE_NAME
       - name: Push Docker image
         run: |
-          docker login -u ${{vars.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
           docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
           docker image push $IMAGE_NAME
       - run: echo "🍏 This job's status is ${{ job.status }}."
