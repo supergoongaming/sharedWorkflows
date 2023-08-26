@@ -2,12 +2,19 @@ name: Push to Docker hub
 
 on:
   workflow_call:
+      inputs:
+        dockerfile-location:
+          required: true
+          type: string
+        image_name:
+          required: true
+          type: string
 jobs:
   Build-Linux:
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: ${{inputs.IMAGE_NAME}}
-      DOCKERFILE_LOCATION: ${{inputs.DOCKERFILE_LOCATION}}
+      IMAGE_NAME: ${{inputs.image_name}}
+      DOCKERFILE_LOCATION: ${{inputs.dockerfile-location}}
       DOCKER_USERNAME: ${{vars.DOCKER_USERNAME}}
       DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
     steps:
