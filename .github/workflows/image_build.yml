@@ -21,7 +21,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Build Docker image
-        run: docker image build -f $DOCKERFILE_LOCATION -t $IMAGE_NAME
+        run: docker image build -f $DOCKERFILE_LOCATION -t $IMAGE_NAME .
       - name: Push Docker image
         run: |
           docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
