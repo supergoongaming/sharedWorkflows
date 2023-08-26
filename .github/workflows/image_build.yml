@@ -9,11 +9,15 @@ on:
         image_name:
           required: true
           type: string
+        build_number:
+         required: true
+         type: string
 jobs:
   Build-Linux:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: ${{inputs.image_name}}
+      BUILD_NUMBER: ${{inputs.build_number}}
       DOCKERFILE_LOCATION: ${{inputs.dockerfile_location}}
       DOCKER_USERNAME: ${{vars.DOCKER_USERNAME}}
       DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
@@ -21,7 +25,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Build Docker image
-        run: docker image build -f $DOCKERFILE_LOCATION -t $IMAGE_NAME .
+        run: docker image build -f $DOCKERFILE_LOCATION -t $IMAGE_NAME:$BUILD_NUMBER .
       - name: Push Docker image
         run: |
           docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
