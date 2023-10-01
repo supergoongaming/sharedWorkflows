@@ -22,17 +22,20 @@ jobs:
       FOLDER_PATH: ${{inputs.folder_path}}
       BUCKET_NAME: ${{inputs.bucket_name}}
     steps:
-      - run: ls -lah $GITHUB_WORKSPACE
+      - uses: actions/checkout@master
+        with:
+          name: supergoongaming/sharedWorkflows
+          ref: master
+          path: src
       - name: Make Temporary folder
         run: mkdir -p /tmp/build
-      - name: Check out repository code
-        run: cp -r $GITHUB_WORKSPACE/s3Uploader/* /tmp/build
       - name: Download Artifact
         uses: actions/download-artifact@v2
         with:
           name: s3Artifact # Specify the name of the artifact
           path: /tmp/build
+      - run: ls -lah src
       - run: ls -lah /tmp/build
       - name: Upload Files to S3
-        run: go run ./s3Uploader/main.go
+        run: go run src/s3Uploader/main.go
       - run: echo "🍏 This job's status is ${{ job.status }}."
