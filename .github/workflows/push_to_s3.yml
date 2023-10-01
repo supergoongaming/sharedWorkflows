@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
         with:
-          name: supergoongaming/sharedWorkflows
+          repository: supergoongaming/sharedWorkflows
           ref: master
           path: src
       - name: Make Temporary folder
