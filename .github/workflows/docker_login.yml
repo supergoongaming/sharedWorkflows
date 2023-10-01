@@ -1,0 +1,17 @@
+name: Login to Docker
+
+
+on:
+  workflow_call:
+
+jobs:
+  Docker-Login:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: ${{vars.DOCKER_USERNAME}}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+      - name: Push Docker image
+        run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run: echo "🍏 This job's status is ${{ job.status }}."
