@@ -1,0 +1,33 @@
+name: Push files to Amazon S3
+
+on:
+  workflow_call:
+      inputs:
+        iam_user:
+          required: true
+          type: string
+        iam_secret:
+          required: true
+          type: string
+        bucket_region:
+          required: true
+          type: string
+        folder_path: # Add this input
+          required: true
+          type: string
+        bucket_name: # Add this input
+          required: true
+          type: string
+jobs:
+  Build-Linux:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{inputs.iam_user}}
+      AWS_SECRET_ACCESS_KEY: ${{inputs.iam_secret}}
+      AWS_REGION: ${{inputs.bucket_region}}
+      FOLDER_PATH: ${{inputs.folder_path}}
+      BUCKET_NAME: ${{inputs.bucket_name}}
+    steps:
+      - name: Upload Files to S3
+        run: go run /s3Uploader/main.go
+      - run: echo "🍏 This job's status is ${{ job.status }}."
