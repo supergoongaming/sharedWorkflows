@@ -33,7 +33,7 @@ jobs:
         with:
           name: s3Artifact # Specify the name of the artifact
           path: /tmp/build
-      - run: ls -lah
+      - run: ls -lah repo
       - name: Upload Files to S3
         run: go run ./s3Uploader/main.go
       - run: echo "🍏 This job's status is ${{ job.status }}."
