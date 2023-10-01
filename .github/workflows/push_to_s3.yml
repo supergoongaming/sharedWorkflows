@@ -22,12 +22,14 @@ jobs:
       FOLDER_PATH: ${{inputs.folder_path}}
       BUCKET_NAME: ${{inputs.bucket_name}}
     steps:
+      - name: Make Temporary folder
+        run: mkdir -p /tmp/build
       - name: Download Artifact
         uses: actions/download-artifact@v2
         with:
           name: s3Artifact # Specify the name of the artifact
-          path: /
-      - run: ls
+          path: /tmp/build
+      - run: ls /s3Uploader
       - name: Upload Files to S3
         run: go run /s3Uploader/main.go
       - run: echo "🍏 This job's status is ${{ job.status }}."
