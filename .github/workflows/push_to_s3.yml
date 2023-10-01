@@ -37,5 +37,6 @@ jobs:
       - run: ls -lah src
       - run: ls -lah /tmp/build
       - name: Upload Files to S3
-        run: go run src/s3Uploader/main.go
+        run: go run main.go
+        working-directory: src/s3Uploader
       - run: echo "🍏 This job's status is ${{ job.status }}."
