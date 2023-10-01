@@ -9,18 +9,11 @@ import (
 	"path/filepath"
 )
 
-// var (
-// 	filename = "index.html"
-// 	myBucket = "triple-triad-external-site"
-// 	myString = "index.html"
-// )
 
 func main() {
 
-	// folderPath := os.Getenv("FOLDER_PATH")
-	folderPath := "files"
-	// myBucket := os.Getenv("BUCKET_NAME")
-	myBucket := "triple-triad-external-site"
+	folderPath := os.Getenv("FOLDER_PATH")
+	myBucket := os.Getenv("BUCKET_NAME")
 
 	sess := session.Must(session.NewSession())
 	uploader := s3manager.NewUploader(sess)
