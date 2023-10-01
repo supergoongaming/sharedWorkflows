@@ -22,18 +22,17 @@ jobs:
       FOLDER_PATH: ${{inputs.folder_path}}
       BUCKET_NAME: ${{inputs.bucket_name}}
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-        with:
-          path: repo # Specify the destination directory for the checkout
+      - run: ls -lah $GITHUB_WORKSPACE
       - name: Make Temporary folder
         run: mkdir -p /tmp/build
+      - name: Check out repository code
+        run: cp -r $GITHUB_WORKSPACE/s3Uploader/* /tmp/build
       - name: Download Artifact
         uses: actions/download-artifact@v2
         with:
           name: s3Artifact # Specify the name of the artifact
           path: /tmp/build
-      - run: ls -lah repo
+      - run: ls -lah /tmp/build
       - name: Upload Files to S3
         run: go run ./s3Uploader/main.go
       - run: echo "🍏 This job's status is ${{ job.status }}."
