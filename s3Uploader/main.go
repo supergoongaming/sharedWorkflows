@@ -53,6 +53,7 @@ func main() {
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to walk the directory %s, %v", folderPath, err)
+		os.Exit(1)
 	}
 
 }

@@ -6,9 +6,6 @@ on:
         bucket_region:
           required: true
           type: string
-        folder_path: # Add this input
-          required: true
-          type: string
         bucket_name: # Add this input
           required: true
           type: string
@@ -19,7 +16,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{secrets.IAM_USER}}
       AWS_SECRET_ACCESS_KEY: ${{secrets.IAM_SECRET}}
       AWS_REGION: ${{inputs.bucket_region}}
-      FOLDER_PATH: /tmp/build/${{inputs.folder_path}}
+      FOLDER_PATH: /tmp/build/
       BUCKET_NAME: ${{inputs.bucket_name}}
     steps:
       - uses: actions/checkout@master
