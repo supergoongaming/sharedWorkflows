@@ -20,7 +20,6 @@ jobs:
       BUILD_NUMBER: ${{inputs.build_number}}
       DOCKERFILE_LOCATION: ${{inputs.dockerfile_location}}
       DOCKER_USERNAME: ${{vars.DOCKER_USERNAME}}
-      # DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
       - name: Check out repository code
