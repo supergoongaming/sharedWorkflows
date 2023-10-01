@@ -22,6 +22,10 @@ jobs:
       FOLDER_PATH: ${{inputs.folder_path}}
       BUCKET_NAME: ${{inputs.bucket_name}}
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          path: repo # Specify the destination directory for the checkout
       - name: Make Temporary folder
         run: mkdir -p /tmp/build
       - name: Download Artifact
