@@ -29,12 +29,12 @@ var (
 			"",
 		},
 		{
-			"wasm",
+			"wasm.gz",
 			"application/wasm",
 			"gzip",
 		},
 		{
-			"gzip",
+			"gz",
 			"gzip",
 			"",
 		},
