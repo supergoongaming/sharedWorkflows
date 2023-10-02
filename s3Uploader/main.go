@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 type fileTypes struct {
@@ -43,6 +44,16 @@ var (
 			"application/javascript",
 			"",
 		},
+		{
+			"json",
+			"application/json",
+			"",
+		},
+		{
+			"png",
+			"image/png",
+			"",
+		},
 	}
 )
 
@@ -58,8 +69,12 @@ func getMetadata(filename string) (map[string]*string, error) {
 		}
 
 	}
-
-	return nil, fmt.Errorf("could not get proper metadata for %s", filename)
+	fmt.Fprintf(os.Stderr, "Could not find anything in your thing for %s, going to return a default metadata item", filename)
+	metadata := make(map[string]*string)
+	thing := "binary/octet-stream"
+	metadata["Content-Type"] = &thing
+	return metadata, nil
+	// return nil, fmt.Errorf("could not get proper metadata for %s", filename)
 }
 
 func main() {
