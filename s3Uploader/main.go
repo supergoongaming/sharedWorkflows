@@ -7,8 +7,60 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
+type fileTypes struct {
+	filetype        string
+	contentType     string
+	contentEncoding string
+}
+
+var (
+	allFileTypes = []fileTypes{
+		{
+			"css",
+			"text/css",
+			"",
+		},
+		{
+			"html",
+			"text/html",
+			"",
+		},
+		{
+			"wasm",
+			"application/wasm",
+			"gzip",
+		},
+		{
+			"gzip",
+			"gzip",
+			"",
+		},
+		{
+			"js",
+			"application/javascript",
+			"",
+		},
+	}
+)
+
+func getMetadata(filename string) (map[string]*string, error) {
+	for _, filetype := range allFileTypes {
+		if strings.HasSuffix(filename, filetype.filetype) {
+			metadata := make(map[string]*string)
+			metadata["Content-Type"] = &filetype.contentType
+			if filetype.contentEncoding != "" {
+				metadata["Content-Encoding"] = &filetype.contentEncoding
+			}
+			return metadata, nil
+		}
+
+	}
+
+	return nil, fmt.Errorf("could not get proper metadata for %s", filename)
+}
 
 func main() {
 
@@ -36,11 +88,16 @@ func main() {
 		if err != nil {
 			return err
 		}
+		metadata, err := getMetadata(path)
+		if err != nil {
+			return err
+		}
 
 		result, err := uploader.Upload(&s3manager.UploadInput{
-			Bucket: aws.String(myBucket),
-			Key:    &s3File,
-			Body:   f,
+			Bucket:   aws.String(myBucket),
+			Key:      &s3File,
+			Body:     f,
+			Metadata: metadata,
 		})
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "failed to upload file, %v", err)
