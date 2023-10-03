@@ -108,12 +108,18 @@ func main() {
 			return err
 		}
 
-		result, err := uploader.Upload(&s3manager.UploadInput{
+		input := s3manager.UploadInput{
 			Bucket:   aws.String(myBucket),
 			Key:      &s3File,
 			Body:     f,
-			Metadata: metadata,
-		})
+			ContentType: metadata["Content-Type"],
+		}
+
+		if val, ok := metadata["Content-Encoding"]; ok {
+			input.ContentEncoding = val
+		}
+
+		result, err := uploader.Upload(&input)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "failed to upload file, %v", err)
 			os.Exit(1)
