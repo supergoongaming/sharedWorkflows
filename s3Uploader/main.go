@@ -36,8 +36,8 @@ var (
 		},
 		{
 			"gz",
+			"application/x-gzip",
 			"gzip",
-			"",
 		},
 		{
 			"js",
