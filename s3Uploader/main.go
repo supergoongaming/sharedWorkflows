@@ -11,14 +11,14 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
-type fileTypes struct {
-	filetype        string
+type s3FileType struct {
+	filetypeSuffix  string
 	contentType     string
 	contentEncoding string
 }
 
 var (
-	allFileTypes = []fileTypes{
+	allFileTypes = []s3FileType{
 		{
 			"css",
 			"text/css",
@@ -28,6 +28,11 @@ var (
 			"html",
 			"text/html",
 			"",
+		},
+		{
+			"js.gz",
+			"application/javascript",
+			"gzip",
 		},
 		{
 			"wasm.gz",
@@ -55,26 +60,21 @@ var (
 			"",
 		},
 	}
+	defaultFiletype = s3FileType{
+		"",
+		"binary/octet-stream",
+		"",
+	}
 )
 
-func getMetadata(filename string) (map[string]*string, error) {
+func getMetadata(filename string) s3FileType {
 	for _, filetype := range allFileTypes {
-		if strings.HasSuffix(filename, filetype.filetype) {
-			metadata := make(map[string]*string)
-			metadata["Content-Type"] = &filetype.contentType
-			if filetype.contentEncoding != "" {
-				metadata["Content-Encoding"] = &filetype.contentEncoding
-			}
-			return metadata, nil
+		if strings.HasSuffix(filename, filetype.filetypeSuffix) {
+			return filetype
 		}
-
 	}
 	fmt.Fprintf(os.Stderr, "Could not find anything in your thing for %s, going to return a default metadata item", filename)
-	metadata := make(map[string]*string)
-	thing := "binary/octet-stream"
-	metadata["Content-Type"] = &thing
-	return metadata, nil
-	// return nil, fmt.Errorf("could not get proper metadata for %s", filename)
+	return defaultFiletype
 }
 
 func main() {
@@ -103,20 +103,20 @@ func main() {
 		if err != nil {
 			return err
 		}
-		metadata, err := getMetadata(path)
+		filetype := getMetadata(path)
 		if err != nil {
 			return err
 		}
 
 		input := s3manager.UploadInput{
-			Bucket:   aws.String(myBucket),
-			Key:      &s3File,
-			Body:     f,
-			ContentType: metadata["Content-Type"],
+			Bucket:      aws.String(myBucket),
+			Key:         &s3File,
+			Body:        f,
+			ContentType: &filetype.contentType,
 		}
 
-		if val, ok := metadata["Content-Encoding"]; ok {
-			input.ContentEncoding = val
+		if filetype.contentEncoding != "" {
+			input.ContentEncoding = &filetype.contentEncoding
 		}
 
 		result, err := uploader.Upload(&input)
