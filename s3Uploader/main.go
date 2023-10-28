@@ -40,6 +40,11 @@ var (
 			"gzip",
 		},
 		{
+			".wasm",
+			"application/wasm",
+			"",
+		},
+		{
 			"gz",
 			"application/x-gzip",
 			"gzip",
